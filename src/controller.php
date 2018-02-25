@@ -85,13 +85,17 @@ function isMoveable($tile) {
 
 }
 
-function pushTile($tile) {
-
+function pushTile($tile)
+{
+    $empty = getEmpty();
+    $tmp = $_SESSION['board'][$empty];
+    $_SESSION['board'][$empty] = $_SESSION['board'][$tile];
+    $_SESSION['board'][$tile] = $tmp;
 }
 
 function move_item($item) {
     if (isMoveable($item)) {
-        echo "Moveable";
+        pushTile($item);
     } else {
         echo "Not Moveable";
     }
