@@ -1,0 +1,7 @@
+web:
+  image: skiychan/nginx-php7:latest
+  ports:
+  - "80:80"
+  volumes:
+  - ./src/:/data/www
+
