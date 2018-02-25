@@ -38,6 +38,10 @@ function game() {
         exit;
     }
 
+    if (isset($_POST["randomize"])) {
+        randomize();
+    }
+
 
 
     display_board();
@@ -154,4 +158,54 @@ function move_item($item) {
             $_SESSION["solved"] = checkState();
         }
     }
+}
+
+function solveable() {
+    $inversion = 0;
+    $item1 = null;
+    $item2 = null;
+
+    for ($i = 0; $i < count($_SESSION['board']); $i++ ) {
+        $val = $_SESSION['board']["button".$i];
+        if ($val == "&nbsp;") {
+            $item1 = 9;
+        } else {
+            $item1 = $val;
+        }
+        for ($j = $i + 1; $j < count($_SESSION['board']); $j++) {
+            $val2 = $_SESSION['board']["button".$j];
+            if ($val == "&nbsp;") {
+                $item2 = 9;
+            } else {
+                $item2 = $val;
+            }
+            if ($item1 && $item2 && $item1 > $item2) {
+                $inversion++;
+            }
+        }
+
+    }
+    foreach($_SESSION['board'] as $name => $val) {
+        if ($val == "&nbsp;") {
+            $item1 = 9;
+        } else {
+            $item1 = $val;
+        }
+
+
+    }
+}
+
+function randomize() {
+    do {
+        $nums = array(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        shuffle($nums);
+        for ($i = 0; $i < count($nums); $i++) {
+            if ($nums[$i] != 9) {
+                $_SESSION['board']['button' . ($i+1)] = $nums[$i];
+            } else {
+                $_SESSION['board']['button' . ($i+1)] = " ";
+            }
+        }
+    } while (!solveable);
 }
