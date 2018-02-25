@@ -9,6 +9,7 @@
 
 function game() {
     if (!isset($_SESSION["board"])) {
+        $_SESSION['firstplay'] = true;
         $_SESSION["board"] = array(
                 "button1" => "1",
                 "button2" => "2",
@@ -20,9 +21,45 @@ function game() {
                 "button8" => "8",
                 "button9" => "&nbsp;"
         );
+    } else {
+        $_SESSION['firstplay'] = false;
+    }
+    if (isset($_POST["clearsession"]))  {
+        if (isset($_SERVER['HTTP_COOKIE'])) {
+            $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+            foreach($cookies as $cookie) {
+                $parts = explode('=', $cookie);
+                $name = trim($parts[0]);
+                setcookie($name, '', time()-1000);
+                setcookie($name, '', time()-1000, '/');
+            }
+        }
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit;
     }
 
+
+
     display_board();
+    display_buttons();
+}
+
+function display_buttons() {
+    echo "<div id=\"puzzle\" class=\"container\">";
+
+    echo "<div class=\"row justify-content-md-center justify-content-sm-center\">";
+
+    echo "<form id=\"clearsession\" action='' method='post'>";
+    echo "<button name=\"clearsession\" class=\"btn btn-primary btn-lg\">Clear Session</button>";
+    echo "</form>";
+
+
+    echo "<form id=\"randomize\" action='' method='post'>";
+    echo "<button name=\"randomize\" class=\"btn btn-danger btn-lg\">Randomize</button>";
+    echo "</form>";
+
+    echo "</div>";
+
 }
 
 
@@ -52,6 +89,9 @@ function display_board() {
     }
     echo "</form>";
     echo "</div>";
+
+    $solved = $_SESSION['solved'] && !$_SESSION['firstplay'] ? "<h1 id=\"solved\" style=\"color: green\">Solved!</h1>" : "";
+    echo $solved;
 }
 
 function getEmpty() {
@@ -85,6 +125,18 @@ function isMoveable($tile) {
 
 }
 
+function checkState() {
+    foreach($_SESSION["board"] as $name => $val) {
+        if (!($name === "button9")) {
+            $check = (int)$name[6];
+            if ($check != $val) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function pushTile($tile)
 {
     $empty = getEmpty();
@@ -96,7 +148,10 @@ function pushTile($tile)
 function move_item($item) {
     if (isMoveable($item)) {
         pushTile($item);
-    } else {
-        echo "Not Moveable";
+        if (checkState()) {
+            $_SESSION["solved"] = checkState();
+        } else {
+            $_SESSION["solved"] = checkState();
+        }
     }
 }

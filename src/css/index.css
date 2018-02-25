@@ -5,6 +5,8 @@
     background-color: #e2e2e2;
 }
 
+
+
 #heading {
     color: #006cdc;
     font-size: 100px;
@@ -43,4 +45,8 @@
 
 #random {
     margin: 10px;
+}
+
+#clearsession {
+    margin: 50px;
 }

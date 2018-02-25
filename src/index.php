@@ -1,15 +1,6 @@
 <?php
 include 'controller.php';
 session_start();
-//if (isset($_SERVER['HTTP_COOKIE'])) {
-//    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
-//    foreach($cookies as $cookie) {
-//        $parts = explode('=', $cookie);
-//        $name = trim($parts[0]);
-//        setcookie($name, '', time()-1000);
-//        setcookie($name, '', time()-1000, '/');
-//    }
-//}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,10 +22,8 @@ session_start();
         <div class="content">
             <?php game()?>
         </div>
-        <h1 id="solved" style="color: green"></h1>
 
         <br>
-        <button id="random" class="btn btn-primary btn-lg" onclick="randomize()">Randomize</button>
         <br/>
         <br/>
         <div class="row reference-container">
