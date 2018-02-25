@@ -8,32 +8,28 @@
 
 
 function game() {
-    $_SESSION["board"] = array(
-        "top" => array(
-            "button1" => "1",
-            "button2" => "2",
-            "button3" => "3",
-        ),
-        "middle" => array(
-            "button4" => "4",
-            "button5" => "5",
-            "button6" => "6",
-        ),
-        "bottom" => array(
-            "button7" => "7",
-            "button8" => "8",
-            "button9" => "&nbsp;"
-        )
-    );
+    if (!isset($_SESSION["board"])) {
+        $_SESSION["board"] = array(
+                "button1" => "1",
+                "button2" => "2",
+                "button3" => "3",
+                "button4" => "4",
+                "button5" => "5",
+                "button6" => "6",
+                "button7" => "7",
+                "button8" => "8",
+                "button9" => "&nbsp;"
+        );
+    }
+
     display_board();
 }
 
 
 function display_board() {
-    $buttons = array("button1", "button2", "button3", "button4", "button5", "button6", "button7", "button8", "button9");
-    foreach($buttons as $button) {
-        if (isset($_POST[$button]))  {
-            setcookie("button", $button, time()+3600, "/", "", 0);
+    foreach($_SESSION['board'] as $name => $val) {
+        if (isset($_POST[$name]))  {
+            setcookie("button", $name, time()+3600, "/", "", 0);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
@@ -43,23 +39,25 @@ function display_board() {
     }
     echo "<div id=\"puzzle\" class=\"container\">";
     echo "<form id=\"button\" action='' method='post'>";
-    foreach($_SESSION["board"] as $key => $value) {
-        echo "<div class=\"row justify-content-md-center justify-content-sm-center\">";
-        foreach($value as $name => $val) {
-            echo "<button type=\"submit\" name='" . $name . "' class=\"btn btn-secondary custombutton\">" . $val . "</button>";
+    $count = 0;
+    foreach($_SESSION["board"] as $name => $val) {
+        if ($count % 3 == 0) {
+            echo "<div class=\"row justify-content-md-center justify-content-sm-center\">";
         }
-        echo "</div>";
+        echo "<button type=\"submit\" name='" . $name . "' class=\"btn btn-secondary custombutton\">" . $val . "</button>";
+        if ($count % 3 == 2) {
+            echo "</div>";
+        }
+        $count += 1;
     }
     echo "</form>";
     echo "</div>";
 }
 
 function getEmpty() {
-    foreach($_SESSION["board"] as $key => $value) {
-        foreach($value as $name => $val) {
-            if ($val == "&nbsp;") {
-                return $name;
-            }
+    foreach($_SESSION["board"] as $name => $val) {
+        if ($val == "&nbsp;") {
+            return $name;
         }
      }
 }
@@ -84,6 +82,10 @@ function isMoveable($tile) {
         }
     }
     return false;
+
+}
+
+function pushTile($tile) {
 
 }
 
