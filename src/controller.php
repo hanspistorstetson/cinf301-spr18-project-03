@@ -75,7 +75,7 @@ function display_board() {
             exit;
         }
     }
-    if (isset($_COOKIE['button'])) {
+    if (isset($_COOKIE['button']) && in_array($_COOKIE['button'], array_keys($_SESSION['board']))) {
         move_item($_COOKIE['button']);
     }
     echo "<div id=\"puzzle\" class=\"container\">";
